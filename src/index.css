@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Premium deep charcoal background */
+    --background: 260 10% 8%;
+    --foreground: 42 30% 92%;
+
+    /* Elevated glass cards */
+    --card: 260 8% 12%;
+    --card-foreground: 42 30% 92%;
+    --card-glass: 0 0% 100%;
+
+    --popover: 260 8% 12%;
+    --popover-foreground: 42 30% 92%;
+
+    /* Warm gold primary accent */
+    --primary: 42 88% 65%;
+    --primary-foreground: 260 10% 8%;
+    --primary-glow: 42 100% 75%;
+
+    /* Cream secondary */
+    --secondary: 42 25% 85%;
+    --secondary-foreground: 260 10% 8%;
+
+    /* Muted charcoal tones */
+    --muted: 260 8% 18%;
+    --muted-foreground: 42 15% 60%;
+
+    /* Purple-blue gradient accent */
+    --accent: 250 70% 65%;
+    --accent-secondary: 195 80% 70%;
+    --accent-foreground: 42 30% 92%;
+
+    /* Neon outline */
+    --neon: 250 100% 75%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 42 30% 92%;
+
+    --border: 260 8% 20%;
+    --input: 260 8% 18%;
+    --ring: 42 88% 65%;
+
+    --radius: 1rem;
+
+    /* Premium gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(250 70% 65%), hsl(195 80% 70%));
+    --gradient-gold: linear-gradient(135deg, hsl(42 88% 65%), hsl(42 100% 75%));
+    --gradient-glass: linear-gradient(135deg, hsla(0 0% 100% / 0.14), hsla(0 0% 100% / 0.08));
+
+    /* Shadows */
+    --shadow-premium: 0 20px 50px -12px hsla(260 10% 8% / 0.4);
+    --shadow-glow: 0 0 40px hsla(42 88% 65% / 0.15);
+    --shadow-neon: 0 0 20px hsla(250 100% 75% / 0.4);
+
+    /* Transitions */
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    --sidebar-background: 260 8% 12%;
+    --sidebar-foreground: 42 30% 92%;
+    --sidebar-primary: 42 88% 65%;
+    --sidebar-primary-foreground: 260 10% 8%;
+    --sidebar-accent: 260 8% 18%;
+    --sidebar-accent-foreground: 42 30% 92%;
+    --sidebar-border: 260 8% 20%;
+    --sidebar-ring: 42 88% 65%;
+  }
+
+  .dark {
+    /* Already dark by default - keeping same values */
+    --background: 260 10% 8%;
+    --foreground: 42 30% 92%;
+    --card: 260 8% 12%;
+    --card-foreground: 42 30% 92%;
+    --popover: 260 8% 12%;
+    --popover-foreground: 42 30% 92%;
+    --primary: 42 88% 65%;
+    --primary-foreground: 260 10% 8%;
+    --secondary: 42 25% 85%;
+    --secondary-foreground: 260 10% 8%;
+    --muted: 260 8% 18%;
+    --muted-foreground: 42 15% 60%;
+    --accent: 250 70% 65%;
+    --accent-foreground: 42 30% 92%;
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 42 30% 92%;
+    --border: 260 8% 20%;
+    --input: 260 8% 18%;
+    --ring: 42 88% 65%;
+    --sidebar-background: 260 8% 12%;
+    --sidebar-foreground: 42 30% 92%;
+    --sidebar-primary: 42 88% 65%;
+    --sidebar-primary-foreground: 260 10% 8%;
+    --sidebar-accent: 260 8% 18%;
+    --sidebar-accent-foreground: 42 30% 92%;
+    --sidebar-border: 260 8% 20%;
+    --sidebar-ring: 42 88% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    @apply bg-gradient-to-br from-[hsla(0,0%,100%,0.14)] to-[hsla(0,0%,100%,0.08)] backdrop-blur-xl;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border: 1px solid hsla(0, 0%, 100%, 0.18);
+  }
+
+  .hover-lift {
+    @apply transition-all duration-500 ease-out hover:-translate-y-1.5 hover:shadow-2xl;
+  }
+
+  .neon-outline {
+    box-shadow: 0 0 0 2px hsl(var(--neon));
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-[hsl(250,70%,65%)] to-[hsl(195,80%,70%)] bg-clip-text text-transparent;
+  }
+
+  .gold-gradient {
+    @apply bg-gradient-to-r from-[hsl(42,88%,65%)] to-[hsl(42,100%,75%)] bg-clip-text text-transparent;
+  }
+}
