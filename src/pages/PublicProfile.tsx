@@ -1,160 +1,68 @@
-import { motion } from "framer-motion";
-import { pageTransition, staggerContainer, fadeInUp } from "@/lib/animations";
-import { Nav } from "@/components/Nav";
-import { Button } from "@/components/Button";
-import { LinkCard } from "@/components/LinkCard";
-import { FiInstagram, FiTwitter, FiGithub, FiYoutube, FiMail, FiGlobe } from "react-icons/fi";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getUserLinks } from "@/lib/links";
+import { getUserProfile } from "@/lib/auth";
 
-const PublicProfile = () => {
-  const links = [
-    { 
-      id: 1, 
-      title: "Latest YouTube Video", 
-      url: "youtube.com/@creator", 
-      icon: <FiYoutube />,
-      clicks: 1284 
-    },
-    { 
-      id: 2, 
-      title: "Shop My Store", 
-      url: "shop.creator.com", 
-      icon: <FiGlobe />,
-      clicks: 892 
-    },
-    { 
-      id: 3, 
-      title: "Instagram", 
-      url: "instagram.com/creator", 
-      icon: <FiInstagram />,
-      clicks: 2156 
-    },
-    { 
-      id: 4, 
-      title: "Newsletter Signup", 
-      url: "newsletter.creator.com", 
-      icon: <FiMail />,
-      clicks: 645 
-    },
-  ];
+const PublicProfile = ({ demo }) => {
+  const { username } = useParams();
+  const profileSlug = demo ? "demo" : username;
 
-  const socialLinks = [
-    { icon: <FiInstagram size={24} />, url: "#", label: "Instagram" },
-    { icon: <FiTwitter size={24} />, url: "#", label: "Twitter" },
-    { icon: <FiGithub size={24} />, url: "#", label: "GitHub" },
-  ];
+  const [profile, setProfile] = useState(null);
+  const [links, setLinks] = useState([]);
+
+  useEffect(() => {
+    if (demo) {
+      setProfile({
+        name: "Demo User",
+        bio: "This is what your page will look like.",
+        avatar: "https://i.pravatar.cc/150",
+      });
+
+      setLinks([
+        { title: "Instagram", url: "https://instagram.com" },
+        { title: "YouTube", url: "https://youtube.com" },
+        { title: "Portfolio", url: "https://example.com" },
+      ]);
+
+      return;
+    }
+
+    const load = async () => {
+      const p = await getUserProfile(profileSlug);
+      const l = await getUserLinks(profileSlug);
+
+      setProfile(p);
+      setLinks(l);
+    };
+
+    load();
+  }, [profileSlug, demo]);
+
+  if (!profile) return <div>Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-background px-4 py-8">
-      <div className="max-w-2xl mx-auto">
-        <Nav />
+    <div className="min-h-screen bg-background text-center pt-16">
+      <img 
+        src={profile.avatar}
+        alt="avatar"
+        className="w-28 h-28 rounded-full mx-auto mb-4"
+      />
 
-        <motion.div
-          variants={staggerContainer}
-          initial="initial"
-          animate="animate"
-          transition={{ staggerChildren: 0.1, delayChildren: 0.2 }}
-          className="space-y-8"
-        >
-          {/* Profile Header */}
-          <motion.div 
-            variants={fadeInUp}
-            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-            className="text-center space-y-4"
+      <h1 className="text-3xl font-bold">{profile.name}</h1>
+      <p className="text-muted-foreground mt-2">{profile.bio}</p>
+
+      <div className="flex flex-col gap-4 max-w-md mx-auto mt-8">
+        {links.map((link, index) => (
+          <a
+            key={index}
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="glass-card p-4 rounded-xl font-medium text-lg"
           >
-            <div className="flex justify-center mb-6">
-              <div className="relative">
-                <Avatar className="w-32 h-32 border-4 border-primary/20 shadow-[0_0_40px_hsla(42,88%,65%,0.2)]">
-                  <AvatarImage src="/placeholder.svg" alt="Profile" />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-primary-glow text-primary-foreground text-4xl font-playfair">
-                    JD
-                  </AvatarFallback>
-                </Avatar>
-                <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-full bg-gradient-to-br from-accent to-accent-secondary flex items-center justify-center border-2 border-background">
-                  <span className="text-xl">✨</span>
-                </div>
-              </div>
-            </div>
-
-            <h1 className="text-5xl lg:text-6xl font-playfair font-bold gold-gradient leading-tight">
-              Jane Doe
-            </h1>
-            
-            <p className="text-lg text-muted-foreground max-w-md mx-auto leading-relaxed">
-              Content creator, entrepreneur & coffee enthusiast ☕
-              <br />
-              <span className="text-sm">Building in public • Sharing the journey</span>
-            </p>
-
-            {/* Social Links */}
-            <div className="flex justify-center gap-4 pt-4">
-              {socialLinks.map((social, index) => (
-                <motion.a
-                  key={index}
-                  href={social.url}
-                  aria-label={social.label}
-                  className="glass-card w-12 h-12 rounded-xl flex items-center justify-center text-muted-foreground hover:text-primary transition-colors hover-lift"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {social.icon}
-                </motion.a>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* CTA Buttons */}
-          <motion.div 
-            variants={fadeInUp}
-            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-            className="space-y-3"
-          >
-            <Button variant="neon" size="lg" className="w-full font-playfair text-xl">
-              ✨ Book a Consultation
-            </Button>
-            <Button variant="primary" size="lg" className="w-full">
-              Download My Free Guide
-            </Button>
-          </motion.div>
-
-          {/* Links Section */}
-          <motion.div 
-            variants={fadeInUp}
-            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-            className="space-y-4"
-          >
-            <h2 className="text-2xl font-playfair font-bold text-center text-foreground mb-6">
-              Featured Links
-            </h2>
-            {links.map((link, index) => (
-              <motion.div
-                key={link.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + index * 0.1 }}
-              >
-                <LinkCard
-                  title={link.title}
-                  url={link.url}
-                  icon={link.icon}
-                  clicks={link.clicks}
-                  onClick={() => window.open(`https://${link.url}`, '_blank')}
-                />
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Footer */}
-          <motion.div 
-            variants={fadeInUp}
-            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-            className="text-center pt-8 pb-4"
-          >
-            <p className="text-sm text-muted-foreground">
-              Powered by <span className="gold-gradient font-semibold">LinkLux</span>
-            </p>
-          </motion.div>
-        </motion.div>
+            {link.title}
+          </a>
+        ))}
       </div>
     </div>
   );
